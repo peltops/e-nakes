@@ -40,6 +40,21 @@ jobs:
       - name: Run build-runner
         run: flutter pub run build_runner build --delete-conflicting-outputs
 
+      - name: Update local.properties
+        run: |
+          ls -al ${{ github.workspace }}/android/local.properties
+          cp ${{ github.workspace }}/android/local.properties ${{ github.workspace }}/android/local.properties.tmp
+          rm ${{ github.workspace }}/android/local.properties
+          ls -al android/
+          grep flutter ${{ github.workspace }}/android/local.properties.tmp > ${{ github.workspace }}/android/local.properties
+          cat ${{ github.workspace }}/android/local.properties
+          echo "" >> ${{ github.workspace }}/android/local.properties
+          echo "sdk.dir=$ANDROID_SDK_PATH" >> ${{ github.workspace }}/android/local.properties          
+          echo "flutter.compileSdkVersion=34" >> ${{ github.workspace }}/android/local.properties
+          echo "flutter.minSdkVersion=23" >> ${{ github.workspace }}/android/local.properties
+          echo "flutter.targetSdkVersion=34" >> ${{ github.workspace }}/android/local.properties
+          cat ${{ github.workspace }}/android/local.properties
+          
       - name: Run tests
         run: flutter test --coverage
 
